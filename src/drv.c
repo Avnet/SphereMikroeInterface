@@ -30,3 +30,11 @@ SOFTWARE.
 void Delay_ms(int delayMs){
     tx_thread_sleep(delayMs);
 }
+
+void Delay_1ms(void){
+    Delay_ms(1);
+}
+
+void Delay_10ms(void){
+    Delay_ms(10);
+}
