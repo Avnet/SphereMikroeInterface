@@ -46,3 +46,5 @@ typedef enum
 
 // Function Prototypes for the MikroE Shim
 void Delay_ms(int);
+void Delay_1ms(void);
+void Delay_10ms(void);
