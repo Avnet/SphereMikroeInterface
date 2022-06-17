@@ -44,7 +44,25 @@ typedef enum
     ACQUIRE_FAIL = (-1)
 } acquire_t;
 
+typedef struct
+{
+    pin_name_t AN;
+    pin_name_t RST;
+    pin_name_t CS;
+    pin_name_t SCK;
+    pin_name_t MISO;
+    pin_name_t MOSI;
+
+    pin_name_t PWM;
+    pin_name_t INT;
+    pin_name_t RX;
+    pin_name_t TX;
+    pin_name_t SCL;
+    pin_name_t SDA;
+} click_socket_t;
+
 // Function Prototypes for the MikroE Shim
 void Delay_ms(int);
 void Delay_1ms(void);
 void Delay_10ms(void);
+
