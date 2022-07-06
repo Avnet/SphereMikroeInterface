@@ -27,15 +27,29 @@ SOFTWARE.
 */
 
 #include "tx_api.h"  // For Delay_ms()
+#include <stdint.h>  // For uint8_t
+#include <stdio.h>  // For printf()
+
+#define MT3620_TIMER_TICKS_PER_SECOND ((ULONG) 100*10)
 
 // Constantes for the MikroE Shim
 #define HAL_PIN_NC -1
 
-// Types for teh MikroE Shim
+// Types for the MikroE Shim
 typedef int pin_name_t;
 typedef int name;
 typedef int err_t;
 typedef int handle_t;
+
+// TODO Implement Ring Buffer for UART Support
+typedef struct
+{
+    uint8_t *buffer;
+    size_t capacity;
+    volatile size_t size;
+    volatile size_t head;
+    volatile size_t tail;
+} ring_buf8_t;
 
 typedef enum
 {
@@ -44,25 +58,30 @@ typedef enum
     ACQUIRE_FAIL = (-1)
 } acquire_t;
 
-typedef struct
-{
-    pin_name_t AN;
-    pin_name_t RST;
-    pin_name_t CS;
-    pin_name_t SCK;
-    pin_name_t MISO;
-    pin_name_t MOSI;
-
-    pin_name_t PWM;
-    pin_name_t INT;
-    pin_name_t RX;
-    pin_name_t TX;
-    pin_name_t SCL;
-    pin_name_t SDA;
-} click_socket_t;
-
 // Function Prototypes for the MikroE Shim
 void Delay_ms(int);
+void Delay_10us(void);
+void Delay_22us(void);
+void Delay_50us(void);
 void Delay_1ms(void);
 void Delay_10ms(void);
+void Delay_30ms(void);
+void Delay_80ms(void);
+void Delay_100ms(void);
 
+// Defines and Macro to leverage examples hardware mapping
+#define MIKROBUS_AN AN
+#define MIKROBUS_RST RST
+#define MIKROBUS_CS CS
+#define MIKROBUS_SCK SCK
+#define MIKROBUS_MISO MISO
+#define MIKROBUS_MOSI MOSI
+#define MIKROBUS_PWM PWM
+#define MIKROBUS_INT INT
+#define MIKROBUS_RX RX
+#define MIKROBUS_TX TX
+#define MIKROBUS_SCL SCL
+#define MIKROBUS_SDA SDA
+
+#define MIKROBUS(index, pinout) MIKROBUS_IMPL(index, pinout)
+#define MIKROBUS_IMPL(index, pinout) MIKROBUS_##index##_##pinout

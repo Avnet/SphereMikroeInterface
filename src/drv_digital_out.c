@@ -27,13 +27,16 @@ SOFTWARE.
 
 #include "drv_digital_out.h"
 
-err_t digital_out_init( digital_out_t *out, pin_name_t unusedParm )
+err_t digital_out_init( digital_out_t *out, pin_name_t outPin )
 {
     if ( HAL_PIN_NC == out->pin )
     {
         return DIGITAL_OUT_UNSUPPORTED_PIN;
     }
     
+    // Map cfg pin to click structure pin
+    out->pin = outPin;
+
     if( 0 == mtk_os_hal_gpio_set_direction( out->pin, OS_HAL_GPIO_DIR_OUTPUT)){
         return DIGITAL_OUT_SUCCESS;
     }
