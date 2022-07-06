@@ -34,6 +34,9 @@ err_t digital_in_init( digital_in_t *in, pin_name_t gpio_pin )
         return DIGITAL_IN_UNSUPPORTED_PIN;
     }
 
+    // Map cfg pin to click structure pin
+    in->pin = gpio_pin;
+
     mtk_os_hal_gpio_set_direction(gpio_pin, MHAL_GPIO_DIRECTION_INPUT);
     return DIGITAL_IN_SUCCESS;
 }

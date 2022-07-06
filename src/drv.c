@@ -31,10 +31,38 @@ void Delay_ms(int delayMs){
     tx_thread_sleep(delayMs);
 }
 
+void Delay_10us(void){
+    printf("Delay_10us() not supported on the MT3620 under threadX!\n");
+}
+
+void Delay_22us(void){
+    printf("Delay_22us() not supported on the MT3620 under threadX!\n");
+}
+
+void Delay_50us(void){
+    printf("Delay_50us() not supported on the MT3620 under threadX!\n");
+}
+
 void Delay_1ms(void){
     Delay_ms(1);
 }
 
 void Delay_10ms(void){
     Delay_ms(10);
+}
+
+void Delay_30ms(void){
+    Delay_ms(30);
+}
+
+void Delay_50ms(void){
+    Delay_ms(50);
+}
+
+void Delay_80ms(void){
+    Delay_ms(80);
+}
+
+void Delay_100ms(void){
+    Delay_ms(100);
 }
