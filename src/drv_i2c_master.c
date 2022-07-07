@@ -130,13 +130,11 @@ err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_w
     }
 
     // Copy the incomming buffer data to the DMA buffer
-    for(uint8_t i = 0; i < len_write_data; i++){
-        i2c_master_write_buf[i] = write_data_buf[i];
-    }
+    memcpy(i2c_master_write_buf, write_data_buf, len_write_data);
 
     if(_acquire( obj, false ) != ACQUIRE_FAIL )
     {
-        if(mtk_os_hal_i2c_write(obj->config.scl, obj->config.addr, i2c_master_write_buf,len_write_data) > 0){
+        if(mtk_os_hal_i2c_write(obj->config.scl, obj->config.addr, i2c_master_write_buf,len_write_data) == 0){
             return I2C_MASTER_SUCCESS;
         }
         else{
@@ -163,9 +161,7 @@ err_t i2c_master_read(i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read
         // Copy the rx data from the DMA buffer and into the passed in buffer
         if(returnValue >= 0){
 
-            for(uint8_t i = 0; i < len_read_data; i++){
-                read_data_buf[i] = i2c_master_read_buf[i];
-            }
+            memcpy(read_data_buf, i2c_master_read_buf, len_read_data);
         }
 
         return I2C_MASTER_SUCCESS;
@@ -194,19 +190,15 @@ err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, si
         }
 
         // Copy the incomming write buffer into the DMA buffer
-        for(uint8_t i = 0; i < len_write_data; i++){
-            i2c_master_write_buf[i] = write_data_buf[i];
-        }
+        memcpy(i2c_master_write_buf, write_data_buf, len_read_data);
 
         returnValue = mtk_os_hal_i2c_write_read(obj->config.scl, obj->config.addr, i2c_master_write_buf,
                                                 i2c_master_read_buf,len_write_data, len_read_data);
 
         // Copy the return data from the DMA buffer into the passed in return buffer
         if(returnValue >= 0){
+            memcpy(read_data_buf, i2c_master_read_buf, len_read_data);
 
-            for(uint8_t i = 0; i < len_read_data; i++){
-                read_data_buf[i] = i2c_master_read_buf[i];
-            }
         }
 
         return I2C_MASTER_SUCCESS;
