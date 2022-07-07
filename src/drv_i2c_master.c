@@ -44,7 +44,7 @@ static err_t _acquire( i2c_master_t *obj, bool obj_open_state )
 
     if ( _owner != obj )
     {
-        status = mtk_os_hal_i2c_ctrl_init(obj->config.scl);
+        status = mtk_os_hal_i2c_ctrl_init(obj->config.sda);
         if(status > 0){
             status = ACQUIRE_FAIL;
         }
@@ -83,7 +83,7 @@ err_t i2c_master_set_speed( i2c_master_t *obj, uint32_t speed )
     if( _acquire( obj, false ) == ACQUIRE_SUCCESS )
     {
         obj->config.speed = speed;
-        if (mtk_os_hal_i2c_speed_init(obj->config.scl, obj->config.speed ) == 0)
+        if (mtk_os_hal_i2c_speed_init(obj->config.sda, obj->config.speed ) == 0)
         {
             return I2C_MASTER_SUCCESS;
         }
@@ -111,7 +111,7 @@ err_t i2c_master_set_slave_address( i2c_master_t *obj, uint8_t address )
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
         obj->config.addr = address;
-        int result = mtk_os_hal_i2c_set_slave_addr(obj->config.scl, address);
+        int result = mtk_os_hal_i2c_set_slave_addr(obj->config.sda, address);
         if(result == 0){
             return I2C_MASTER_SUCCESS;
         }
@@ -134,7 +134,7 @@ err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_w
 
     if(_acquire( obj, false ) != ACQUIRE_FAIL )
     {
-        if(mtk_os_hal_i2c_write(obj->config.scl, obj->config.addr, i2c_master_write_buf,len_write_data) == 0){
+        if(mtk_os_hal_i2c_write(obj->config.sda, obj->config.addr, i2c_master_write_buf,len_write_data) == 0){
             return I2C_MASTER_SUCCESS;
         }
         else{
@@ -156,7 +156,7 @@ err_t i2c_master_read(i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read
 
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
-        returnValue = mtk_os_hal_i2c_read(obj->config.scl,obj->config.addr, i2c_master_read_buf, len_read_data);
+        returnValue = mtk_os_hal_i2c_read(obj->config.sda,obj->config.addr, i2c_master_read_buf, len_read_data);
         
         // Copy the rx data from the DMA buffer and into the passed in buffer
         if(returnValue >= 0){
@@ -192,7 +192,7 @@ err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, si
         // Copy the incomming write buffer into the DMA buffer
         memcpy(i2c_master_write_buf, write_data_buf, len_read_data);
 
-        returnValue = mtk_os_hal_i2c_write_read(obj->config.scl, obj->config.addr, i2c_master_write_buf,
+        returnValue = mtk_os_hal_i2c_write_read(obj->config.sda, obj->config.addr, i2c_master_write_buf,
                                                 i2c_master_read_buf,len_write_data, len_read_data);
 
         // Copy the return data from the DMA buffer into the passed in return buffer
@@ -209,7 +209,7 @@ err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, si
 
 void i2c_master_close( i2c_master_t *obj )
 {
-    if( mtk_os_hal_i2c_ctrl_deinit(obj->config.scl) >= 0)
+    if( mtk_os_hal_i2c_ctrl_deinit(obj->config.sda) >= 0)
     {
         obj->handle = -1; //NULL;
         _owner = NULL;
