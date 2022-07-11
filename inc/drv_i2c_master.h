@@ -29,7 +29,7 @@ SOFTWARE.
 #include "os_hal_i2c.h"
 #include "drv.h"
 
-#define I2C_BUFFER_MAX_LEN 128
+#define I2C_BUFFER_MAX_LEN 256
 
 // Add typedef to match MikroE driver files
 typedef enum
